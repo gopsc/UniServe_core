@@ -28,7 +28,7 @@ $(shell mkdir -p $(BUILD_DIR))
 #	$(CPP)  -shared -fPIC $^ $(LIBS) -o $@
 
 all: ${APP_NAME}
-${APP_NAME}: $(BUILD_DIR)/main.o $(BUILD_DIR)/fsm.o $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o
+${APP_NAME}: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o
 	$(CPP) $^ $(LIBS) -o $@
 
 icl:
