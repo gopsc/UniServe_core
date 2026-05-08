@@ -934,7 +934,9 @@ void pmc_serve(po::variables_map& vm)
 	server->run();
 }
 
-/* 解析自启动列表、添加自启动项 */
+/* 解析自启动列表、添加自启动项
+ *
+ * 如果在解析过程中出错，只是打印异常，然后继续？ */
 void parse_self_init_list(std::string &path) 
 try {
 
