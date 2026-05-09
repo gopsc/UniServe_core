@@ -50,28 +50,16 @@ public:
 
 
 	/* 设置停止回调函数 */
-	void set_stop(f_t callback); //{
-    
-	//	StopEvent = std::make_unique<f_t>(callback);
-	//}
+	void set_stop(f_t callback);
 
 	/* 设置唤醒回调函数 */
-	void set_wake(f_t callback); //{
-		
-	//	WakeEvent = std::make_unique<f_t>(callback);
-	//}
+	void set_wake(f_t callback);
 
 	/* 设置循环体回调函数 */
-	void set_loop(f_t callback); //{
-	
-	//	LoopEvent = std::make_unique<f_t>(callback);
-	//}
+	void set_loop(f_t callback);
 
 	/* 设置清理回调函数 */
-	void set_clear(f_t callback); //{
-
-	//	ClearEvent = std::make_unique<f_t> (callback);
-	//}
+	void set_clear(f_t callback);
 
     /*-----------------------------------*/
     /*-----------------------------------*/
@@ -82,16 +70,12 @@ public:
      *
      * FIXME: 将检查器和变异器做成一个简单的回调函数
      */
-    Fsm::Stat check(); //{
-    //    return fsm.check();
-    //}
+    Fsm::Stat check();
 
     /*-----------------------------------*/
     /*-----------------------------------*/
     /* 让线程能够阻塞直到新的状态被赋予的方法 */
-    void suspend(); //{
-    //    fsm.suspend();
-    //}
+    void suspend();
 
     /*-----------------------------------*/
     /*-----------------------------------*/
@@ -101,48 +85,19 @@ public:
      *
      * 唤醒函数不可以进行该类中的锁操作，否则会造成死锁
      */
-    void wake();// {
-        //{
-            //std::lock_guard<std::mutex> lk(mtx_th);
-    //        fsm.set(Fsm::Stat::START);
-            //ready = true;
-        //}
-        //cv.notify_all();
-    //} /* wake */
+    void wake();
 
     /* 进入静止状态
      *
      * 上锁、唤醒阻塞的线程
      */
-    void stop(); //{
-    //    {
-    //        std::lock_guard<std::mutex> lk(mtx_th);
-    //        fsm.set(Fsm::Stat::STOP);
-    //        ready = true;
-    //    }
-        /* 可能会出现多个线程在等待的情况 */
-    //    cv.notify_all();
-    //}/* stop */
+    void stop();
 
     /* 进入关闭状态 */
-    void shut(); //{
-    //    {
-    //        std::lock_guard<std::mutex> lk(mtx_th);
-    //        fsm.set(Fsm::Stat::SHUT);
-    //        ready = true;
-    //    }
-    //    cv.notify_all();
-    //} /*shut*/
+    void shut();
 
     /* 进入运行状态 */
-    void run(); //{
-    //    {
-    //        std::lock_guard<std::mutex> lk(mtx_th);
-    //        fsm.set(Fsm::Stat::RUNNING);
-    //        ready = true;
-    //    }
-    //    cv.notify_all();
-    //}/*run*/
+    void run();
 
     /*-----------------------------------*/
     /*-----------------------------------*/
@@ -152,33 +107,15 @@ public:
      *
      * 该函数不能放在构造函数内，因为需要确保对象已经被构造了
      */
-    void Activate();// {
-
-        /* 防止重复初始化
-	 * FIXME: 抛出异常？感觉也不太合适 */
-    //    if (th) return; 
-
-        /* 申请线程资源 */
-    //    th = std::make_unique<std::thread>(&Thread::main, this);
-
-    //}
+    void Activate();
 
     /*
      * 尝试唤醒线程并等待它开始 据说该函数有问题可能导致异常
      */
-    void WaitStart(); //{
-    //    std::unique_lock<std::mutex> lk(mtx_th);	/* 不进入临界区可能会造成死等，在唤醒过程非常短暂的情况下 */
-    //    wake(); 	/* 这就是为什么wake()不可以获取临界区，否则会造成死锁 */
-    //    ready = false;	/* 这个临界区结束后，WakeEvent()中的run()会唤醒线程的堵塞 */
-    //    cv.wait(lk, [this] { return ready; });
-    //}
+    void WaitStart();
 
     /* 等待线程关闭 */
-    void WaitClose(); //{
-    //    shut();
-    //    if (th->joinable())
-    //        th->join();
-    //}
+    void WaitClose();
 
     /*-----------------------------------*/
     /* 线程主函数 */
