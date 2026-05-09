@@ -3,23 +3,16 @@
 #include <stdexcept>
 #include "nn/NeuralNetwork.hpp"
 namespace qing {
-class NNBuilder {  /* 神经网络构建 */
+class NNBuilder {  /* 神经网络构建器 */
 public:
-    void add(NeuralNetwork &layer);
 
-    /* 获取变换层的形状
-     * FIXME: 这个函数有必要吗  */
-    std::vector<std::pair<long, long>> get_shape() const;
+	void add(NeuralNetwork &layer);
 
-    /* 向标准输出打印形状 */
-    void print_shape() const;
+	std::vector<std::pair<long, long>> get_shape() const;	/* 获取变换层的形状 */
 
-    /* 向输出流储存模型 */
-    void save(std::ostream& out) {
-        for (auto& layer: nn) {
-            layer.save(out);
-        }
-    }
+	void print_shape() const;	/* 向标准输出打印形状 */
+
+	void save(std::ostream& out);	/* 向输出流储存模型 */
 
     /* 从输入流加载模型 */
     void load(std::istream& in) {
@@ -29,10 +22,8 @@ public:
                 auto layer = NeuralNetwork::Load_in_Factory(in);
                 add(layer);
             }
-	    catch (std::runtime_error& e) {
-                break;
-            }
-        }
+	    catch (std::runtime_error& e) { break; }
+	}
     }
 
     /*

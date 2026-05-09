@@ -45,4 +45,9 @@ namespace qing {
         }
 	return res;
     }
+
+    void NNBuilder::save(std::ostream& out) {
+        for (auto& layer: nn)
+            layer.save(out);
+    }
 }

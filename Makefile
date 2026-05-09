@@ -32,7 +32,7 @@ ${APP_NAME}.out: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpSer
 	$(CPP) $^ $(LIBS) -o $@
 
 test: test.out
-test.out: $(BUILD_DIR)/I2C.o $(BUILD_DIR)/Matrix.o src/test.cpp
+test.out: $(BUILD_DIR)/I2C.o $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/NNBuilder.o src/test.cpp
 	$(CPP) $^ $(INCS) -o $@
 
 icl:

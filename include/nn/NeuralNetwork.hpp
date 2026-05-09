@@ -55,7 +55,7 @@ public:
 
 	void update(float discount = 1.0);	/* 更新权重  可以输入一个折扣系 */
     
-	void save(std::ostream& out) override；	/* 输出神经网络到输出流 */
+	void save(std::ostream& out) override;	/* 输出神经网络到输出流 */
 
 
 private:

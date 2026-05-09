@@ -18,7 +18,7 @@ long NeuralNetwork::get_inputno() const	/* 获取输入层大小 */
 long NeuralNetwork::get_outputno() const	/* 获取输出层大小 */
 { return this->outputno; }
 
-const ActivationFunc& NeuralNetwork::get_f() const	/* 获取激活函数类型 */
+const ILayer::ActivationFunc& NeuralNetwork::get_f() const	/* 获取激活函数类型 */
 { return f_type;  }
 
 const float& NeuralNetwork::get_lr () const	/* 获取该层的学习率 */
