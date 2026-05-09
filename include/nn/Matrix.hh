@@ -15,14 +15,14 @@
 #include <iostream>
 #include <stdexcept>
 #include "cn/中文化.hpp"
-命名空间 qing {
-模板 <类型名 T>	
+namespace qing {
+template <typename T>	
 /* 矩阵类 - 二维向量 (FIXME: 1.增加函数广播方法。2.增加+=操作符等)。3. 增加初始化方法*/
-类 Matrx {  
-公开的:
+class Matrx {  
+public:
     Matrx();
-    Matrx(常量 长型 row, 常量 长型 col);  /* 该构造函数用于从头开始构造 */
-    Matrx(常量 长型 row, 常量 长型 col, 常量 std::vector<T>& src);  /* 该构造函数用于通过已有的vector进行构造 */
+    Matrx(const long row, const long col);  /* 该构造函数用于从头开始构造 */
+    Matrx(const long row, const long col, const std::vector<T>& src);  /* 该构造函数用于通过已有的vector进行构造 */
     const T& get(long row, long col) const;   /* 访问器 - 访问矩阵元素 */
     T& witch(long row, long col);  /* 访问器 - 访问矩阵元素 */
     const std::vector<T>& get_data() const;  /* 访问器 - 用于获取原始数据 */
@@ -36,9 +36,11 @@
     Matrx<T> operator+(T& item);  /* 矩阵加法广播 */
     Matrx<T> operator-(const Matrx<T>& other);  /* 操作符重载 - 矩阵减法 */
     Matrx<T> operator-(T& item);  /* 操作符重载 - 矩阵减法广播 */
-    const Matrx<T> operator*(const Matrx<T>& other);  /* 操作符重载 - 矩阵乘法 */ 
+    Matrx<T> operator*(const Matrx<T>& other);  /* 操作符重载 - 矩阵元素相乘 */
     Matrx<T> operator*(T& item);  /* 操作符重载 - 矩阵乘法广播 */
+    Matrx<T> operator/(const Matrx<T>& other);  /* 操作符重载 - 矩阵元素相除 */
     Matrx<T> operator/(T& item);  /* 操作符重载 - 矩阵除法广播 */
+    const Matrx<T> dot(const Matrx<T>& other);  /* 矩阵乘法 */ 
 
     /* 储存矩阵 */
     void save(std::ostream& out) {

@@ -10,7 +10,7 @@ class NeuralNetwork: public ILayerFullyConnectted {
 public:
 
     /* 构造函数 使用基本参数构造
-     * FIXME: 只能输入已经存在的向量 */
+     * FIXME: 目前只能输入已经存在的向量变量 */
     NeuralNetwork(
         const long inputno, const long outputno,
         const std::vector<float> &weights,
@@ -30,11 +30,7 @@ public:
     	return learning_rate;
     }
 
-    /*
-     * 获取输入层大小
-     *
-     * FIXME: 优化掉这两个访问器，通过直接返回矩阵，获取层的形状
-     */
+    /* 获取输入层大小 */
     long get_inputno() const;
 
     /* 获取输出层大小 */
@@ -58,71 +54,23 @@ public:
     static NeuralNetwork Create_in_Factory(const long inputno, const long outputno, float learning_rate, ActivationFunc func_type);
 
     /* 工厂模式 通过输入流读形状构建 */
-    static NeuralNetwork Load_in_Factory(std::istream& in) {
-        std::string f_name;
-        if (!(in >> f_name))
-            throw std::runtime_error("read out of lines");
-        float learning_rate;
-        in >> learning_rate;
-        /*------------------*/
-        size_t row, col;
-        in >> row;  /* FIXME: 如果是负数会怎样 */
-        in >> col;
-        auto weis = load_vec(in, row * col);
-        size_t rowb, colb;
-        in >> rowb >> colb; /* FIXME: 如果这里读错了，也要抛出异常 */
-        auto bias = load_vec(in, col);
-        auto layer  = NeuralNetwork(
-            row, col, weis, bias, learning_rate, ILayer::parse_ff_type(f_name));
-       /*------------------*/
-        return layer;
-    }
+    static NeuralNetwork Load_in_Factory(std::istream& in);
 
-    static std::vector<float> load_vec(std::istream& in, size_t length) {
-        std::vector<float> data;
-        for (size_t i = 0; i < length; ++i) {
-            float item;
-            in >> item;
-            data.push_back(item);
-        }
-	return data;
-    }
+    /* 从输入流加载向量 */
+    static std::vector<float> load_vec(std::istream& in, size_t length);
 
 
-    /* 前向反馈 */
+    /* 前向推理 */
     std::vector<float> forward(const std::vector<float>& x) override;
 
     /* 反向传播 */
     std::vector<float> backward(const std::vector<float>& errors) override;
 
-    /*
-     * 更新权重
-     *
-     * 可以输入一个折扣系数
-     */
+    /* 更新权重  可以输入一个折扣系数 */
     void update(float discount = 1.0);
     
-    /*
-     * 神经网络层长大
-     *
-     * 重新初始化权重矩阵，使用均匀分布初始化
-     *
-     * num: 增加的神经元数量
-     * flag: true为增加输入层，false为增加输出层
-     */
-    //void grow(int num, bool flag) {
-
     /* 输出神经网络到输出流 */
-    void save(std::ostream& out) override {
-        out << get_f_type(f_type) << " ";
-        out << learning_rate << " ";
-        weights.save(out);  out << " ";
-        bias.save(out);     out << "\n";
-    }
-
-    /* 从输入流加载模型
-     * FIXME: 只能从工厂模式中构造 */
-    //void load(std::istream& in) override 
+    void save(std::ostream& out) override；
 
 
 private:

@@ -13,67 +13,62 @@
 #include <linux/i2c-dev.h>
 #include <iostream>
 #include <pthread.h>
-#include "cn/中文化.hpp"
+//#include "cn/中文化.hpp"
 
-静态的 整数 文件描述符 = -1;
+static int fd = -1;
 static pthread_mutex_t mutex;  /* FIXME: 这个锁我们只提供接口给外部使用？ */
 
-逻辑型 I2C_检查() {
-    返回 !(文件描述符 < 0);
+bool I2C_check() {
+    return !(fd < 0);
 }
 
-空类型 I2C_初始化(常量 字符* 设备路径 = "/dev/i2c-1") {  /* FIXME: 动态指定设备文件 */
-    如果 ((文件描述符 = open(设备路径, O_RDWR)) < 0)
-        抛出异常 std::runtime_error( /* FIXME: 使用专用的异常类 */
-            "Failed to open I2C bus: " + std::string(strerror(errno))
-        );
+void I2C_init(const char* path) {  /* FIXME: 动态指定设备文件 */
+    if ((fd = open(path, O_RDWR)) < 0)
+        throw std::runtime_error( /* FIXME: 使用专用的异常类 */
+            "Failed to open I2C bus: " + std::string(strerror(errno)));
 }
 
-空类型 I2C_清理() {
-    close(文件描述符);
+void I2C_free() {
+    close(fd);
 }
 
-空类型 I2C_置地址(常量 uint8_t 地址) {
-    如果 (ioctl(文件描述符, I2C_SLAVE, 地址) < 0)
-        抛出异常 std::runtime_error(
-            "Failed to set I2C address: " + std::string(strerror(errno))
-        );
+void I2C_setAddr(const uint8_t addr) {
+    if (ioctl(fd, I2C_SLAVE, addr) < 0)
+        throw std::runtime_error(
+            "Failed to set I2C address: " + std::string(strerror(errno)));
 }
 
-空类型 I2C_写寄存器(无号8位整 寄存器, 无号8位整 值) {  /* 写寄存器 */
-    无号8位整 缓冲区[] = {寄存器, 值};
-    如果 (write(文件描述符, 缓冲区, 2) != 2)
-        抛出异常 std::runtime_error(
-            "I2C write error: " + std::string(strerror(errno))
-        );
+void I2C_writeReg(uint8_t reg, uint8_t val) {  /* 写寄存器 */
+    uint8_t buf[] = {reg, val};
+    if (write(fd, buf, 2) != 2)
+        throw std::runtime_error(
+            "I2C write error: " + std::string(strerror(errno)));
 }
 
 /* 读寄存器 */
-无号8位整 I2C_读寄存器(无号8位整 寄存器) {
+uint8_t I2C_readReg(uint8_t reg) {
 
-    无号8位整 值;
+    uint8_t val;
 
-    如果 (write(文件描述符, &寄存器, 1) != 1)
-        抛出异常 std::runtime_error(
-            "I2C read error: " + std::string(strerror(errno))
-        );
+    if (write(fd, &reg, 1) != 1)
+        throw std::runtime_error(
+            "I2C read error: " + std::string(strerror(errno)));
 
-    如果 (read(文件描述符, &值, 1)!= 1)
-        抛出异常 std::runtime_error(
-            "I2C read error: " + std::string(strerror(errno))
-        );
+    if (read(fd, &val, 1)!= 1)
+        throw std::runtime_error(
+            "I2C read error: " + std::string(strerror(errno)));
 
-    返回 值;
+    return val;
 
 }
 
 
 /* 获取锁 */
-空类型 I2C_获取锁() {
+void I2C_lock() {
     pthread_mutex_lock(&mutex); /* 加锁 */
 }
 
 /* 释放锁 */
-空类型 I2C_释放锁() {
+void I2C_unlock() {
     pthread_mutex_unlock(&mutex);   /* 解锁 */
 }

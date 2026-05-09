@@ -75,13 +75,57 @@ void NeuralNetwork::xavierUniformInit(std::vector<float> &weights, int fan_in, i
 }
 
 /* 工厂模式 通过形状构建全连接层 */
-NeuralNetwork NeuralNetwork::Create_in_Factory(const long inputno, const long outputno, float learning_rate, ActivationFunc func_type)
+NeuralNetwork NeuralNetwork::Create_in_Factory(
+		const long inputno, const long outputno,
+		float learning_rate, ActivationFunc func_type)
 {
     std::vector<float> weights(inputno * outputno);
     xavierUniformInit(weights, inputno, outputno);
     std::vector<float> bias(outputno);
     NeuralNetwork layer(inputno, outputno, weights, bias, learning_rate, func_type);
     return layer; /* FIXME: 使用移动语义 */
+}
+
+
+NeuralNetwork NeuralNetwork::Load_in_Factory(std::istream& in)
+{
+	std::string f_name;
+	if (!(in >> f_name))
+		throw std::runtime_error("read out of lines");
+	float learning_rate;
+	in >> learning_rate;
+	/*------------------*/
+	size_t row, col;
+	in >> row;  /* FIXME: 如果是负数会怎样 */
+	in >> col;
+	auto weis = load_vec(in, row * col);
+	size_t rowb, colb;
+	in >> rowb >> colb; /* FIXME: 如果这里读错了，也要抛出异常 */
+	auto bias = load_vec(in, col);
+	auto layer  = NeuralNetwork(
+		row, col, weis, bias, learning_rate, ILayer::parse_ff_type(f_name));
+       /*------------------*/
+	return layer;
+}
+
+
+std::vector<float> NeuralNetwork::load_vec(std::istream& in, size_t length)
+{
+	std::vector<float> data;
+	for (size_t i = 0; i < length; ++i) {
+		float item;
+		in >> item;
+		data.push_back(item);
+	}
+	return data;
+}
+
+void NeuralNetwork::save(std::ostream& out)
+{
+	out << get_f_type(f_type) << " ";
+	out << learning_rate << " ";
+	weights.save(out);  out << " ";
+	bias.save(out);     out << "\n";
 }
 
 

@@ -27,24 +27,28 @@ $(shell mkdir -p $(BUILD_DIR))
 #$(BUILD_DIR)/libpmc.so:  $(BUILD_DIR)/ansi.o $(BUILD_DIR)/utf8.o $(BUILD_DIR)/fsm.o $(BUILD_DIR)/Color.o $(BUILD_DIR)/Matrix.o
 #	$(CPP)  -shared -fPIC $^ $(LIBS) -o $@
 
-all: ${APP_NAME}
-${APP_NAME}: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o
+all: ${APP_NAME}.out
+${APP_NAME}.out: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o
 	$(CPP) $^ $(LIBS) -o $@
 
+test: test.out
+test.out: $(BUILD_DIR)/I2C.o $(BUILD_DIR)/Matrix.o src/test.cpp
+	$(CPP) $^ $(INCS) -o $@
+
 icl:
-lci: $(BUILD_DIR)/mainLci.o $(BUILD_DIR)/ansi.o $(BUILD_DIR)/utf8.o $(BUILD_DIR)/fsm.o $(BUILD_DIR)/Color.o $(BUILD_DIR)/ku500.o $(BUILD_DIR)/CommonThread.o $(BUILD_DIR)/Drawable.o $(BUILD_DIR)/Area.o $(BUILD_DIR)/FrameBuf.o $(BUILD_DIR)/mem.o $(BUILD_DIR)/I2C.o $(BUILD_DIR)/PCA9685.o $(BUILD_DIR)/MPU6050.o $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/NNBuilder.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/Thread.o
+lci.out: $(BUILD_DIR)/mainLci.o $(BUILD_DIR)/ansi.o $(BUILD_DIR)/utf8.o $(BUILD_DIR)/fsm.o $(BUILD_DIR)/Color.o $(BUILD_DIR)/ku500.o $(BUILD_DIR)/CommonThread.o $(BUILD_DIR)/Drawable.o $(BUILD_DIR)/Area.o $(BUILD_DIR)/FrameBuf.o $(BUILD_DIR)/mem.o $(BUILD_DIR)/I2C.o $(BUILD_DIR)/PCA9685.o $(BUILD_DIR)/MPU6050.o $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/NNBuilder.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/Thread.o
 	$(CPP) $^ $(LIBS) -ljpeg -lpng  -o $@
 
 agent:
-agent: $(BUILD_DIR)/mainAgent.o $(BUILD_DIR)/WebSocketClient.o
+agent.out: $(BUILD_DIR)/mainAgent.o $(BUILD_DIR)/WebSocketClient.o
 	$(CPP) $^ $(LIBS) -lcurl -o $@
 
 nn:
-nn: $(BUILD_DIR)/mainNn.o $(BUILD_DIR)/Camera.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/NNBuilder.o
+nn.out: $(BUILD_DIR)/mainNn.o $(BUILD_DIR)/Camera.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/NNBuilder.o
 	$(CPP) $^ $(LIBS) -ljpeg  -o $@
 
 camera:
-camera: $(BUILD_DIR)/mainCamera.o $(BUILD_DIR)/Camera.o
+camera.out: $(BUILD_DIR)/mainCamera.o $(BUILD_DIR)/Camera.o
 	$(CPP) $^ $(LIBS) -ljpeg -o $@
 
 $(BUILD_DIR)/mainLci.o:  src/mainLci.cpp
@@ -145,7 +149,7 @@ install: $(APP_NAME)
 	@echo "正在安装 $(APP_NAME) 到$(INSTL_DIRS)"
 	@
 	#@mkdir -p $(INSTL_DIRS)
-	@cp -f nidus $(INSTL_DIRS)
+	@cp -f $(APP_NAME).out $(INSTL_DIRS)/$(APP_NAME)
 	#@chmod 755 $(INSTL_DIRS)/pmcd
 	@
 	@echo "正在配置 $(APP_NAME)"
@@ -161,7 +165,7 @@ install: $(APP_NAME)
 uninstall:
 	@echo "正在从 $(INSTL_DIRS) 卸载 $(APP_NAME)"
 	@
-	@rm -f $(INSTL_DIRS)/pmc
+	@rm -f $(INSTL_DIRS)/$(APP_NAME)
 	@rm -f $(CONF_DIRS)/$(CONF_NAME)
 	@rm -f -d ${CONF_DIRS}
 	@
@@ -174,4 +178,4 @@ uninstall:
 
 clean:
 	@rm -rvf $(BUILD_DIR)
-	@rm -vf lci pmc mybot agent nn
+	@rm -vf *.out
