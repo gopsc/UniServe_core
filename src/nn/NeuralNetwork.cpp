@@ -1,89 +1,62 @@
 #include "nn/NeuralNetwork.hpp"
 namespace qing{
-/* 构造函数 使用基本参数构造 */
-NeuralNetwork::NeuralNetwork(
-    const long inputno, const long outputno,
-    const std::vector<float> &weights,
-    const std::vector<float> &bias,
-    const float learning_rate,
-    const ActivationFunc func_type
-): inputno(inputno), outputno(outputno),
-    weights(inputno, outputno, weights), bias( 1, outputno, bias),
-    learning_rate(learning_rate),
-    f_type(func_type) {
-        ;/* 进行形状检查 */
-}
 
-/* 获取输入层大小 */
-long NeuralNetwork::get_inputno() const {
-    return this->inputno;
-}
+NeuralNetwork::NeuralNetwork(	/* 构造函数 使用基本参数构造 */
+	const long inputno, const long outputno,
+	const std::vector<float> &weights,
+	const std::vector<float> &bias,
+	const float learning_rate,
+	const ActivationFunc func_type)
+: inputno(inputno), outputno(outputno),
+	weights(inputno, outputno, weights), bias( 1, outputno, bias),
+	learning_rate(learning_rate),
+	f_type(func_type) { ; }	/* 应该进行形状检查 */
 
-/* 获取输出层大小 */
-long NeuralNetwork::get_outputno() const {
-    return this->outputno;
-}
+long NeuralNetwork::get_inputno() const	/* 获取输入层大小 */
+{ return this->inputno; }
 
-const ActivationFunc& NeuralNetwork::get_f() const
+long NeuralNetwork::get_outputno() const	/* 获取输出层大小 */
+{ return this->outputno; }
+
+const ActivationFunc& NeuralNetwork::get_f() const	/* 获取激活函数类型 */
 { return f_type;  }
 
-const float& NeuralNetwork::get_lr () const
+const float& NeuralNetwork::get_lr () const	/* 获取该层的学习率 */
 {  return learning_rate;  }
 
-/* 获取权重 */
-Matrx<float>& NeuralNetwork::get_weights() {
-	return this->weights;
-}
+Matrx<float>& NeuralNetwork::get_weights()	/* 获取权重 */
+{  return this->weights;  }
 
-/* 获取偏置 */
-Matrx<float>& NeuralNetwork::get_bias() {
-	return this->bias;
-}
+Matrx<float>& NeuralNetwork::get_bias()	/* 获取偏置 */
+{  return this->bias;  }
 
-/* 正态分布Xavier初始化 */
-void NeuralNetwork::xavierNormalInit(std::vector<float> &weights, long fan_in, long fan_out)
+void NeuralNetwork::xavierNormalInit(	/* 正态分布Xavier初始化 */
+	std::vector<float> &weights, long fan_in, long fan_out)
 {
-
-    /* 高质量的随机数生成器 */
-    static std::mt19937 generator(std::random_device{}());
-
-    /* 计算标准差 */
-    float sigma = std::sqrt(2.0f / (fan_in + fan_out));
-
-    /* 创建正态分布对象，均值为0，标准差为sigma */
-    std::normal_distribution<float> distribution(0.0f, sigma);
-
-    /* 遍历权重矩阵，进行赋值 */
-    long k=0;
-    for (long i=0; i<fan_in; ++i)
-        for (long j=0; j<fan_out; ++j)
-            weights[k++] = distribution(generator);
-
+	static std::mt19937 generator(std::random_device{}());	/* 高质量的随机数生成器 */
+	float sigma = std::sqrt(2.0f / (fan_in + fan_out));	/* 计算标准差 */
+	std::normal_distribution<float> distribution(0.0f, sigma);	/* 创建正态分布对象，均值为0，标准差为sigma */
+	long k=0;	/* 遍历权重矩阵，进行赋值 */
+	for (long i=0; i<fan_in; ++i)
+		for (long j=0; j<fan_out; ++j)
+			weights[k++] = distribution(generator);
 }
 
-/* 均匀分布Xavier初始化函数 */
-void NeuralNetwork::xavierUniformInit(std::vector<float> &weights, int fan_in, int fan_out)
+void NeuralNetwork::xavierUniformInit(	/* 均匀分布Xavier初始化函数 */
+	std::vector<float> &weights, int fan_in, int fan_out)
 {
-    /* 使用高质量的随机数生成器 */
-    static std::mt19937 generator(std::random_device{}());
-        
-    /* 计算区间范围：sqrt(2 / (fan_in + fan_out)) */
-    float scale = std::sqrt(2.0f / (fan_in + fan_out));
-        
-    /* 创建均匀分布对象，范围为[-scale, scale] */
-    std::uniform_real_distribution<float> distribution(-scale, scale);
-        
-    /* 遍历权重矩阵，进行赋值 */
-    long k=0;
-    for (long i=0; i<fan_in; ++i)
-        for (long j=0; j<fan_out; ++j)
-            weights[k++] = distribution(generator);
+	static std::mt19937 generator(std::random_device{}());	/* 使用高质量的随机数生成器 */
+        float scale = std::sqrt(2.0f / (fan_in + fan_out));	/* 计算区间范围：sqrt(2 / (fan_in + fan_out)) */
+        std::uniform_real_distribution<float> distribution(-scale, scale);	/* 创建均匀分布对象，范围为[-scale, scale] */
+	long k=0;	/* 遍历权重矩阵，进行赋值 */
+	for (long i=0; i<fan_in; ++i)
+		for (long j=0; j<fan_out; ++j)
+			weights[k++] = distribution(generator);
 }
 
-/* 工厂模式 通过形状构建全连接层 */
-NeuralNetwork NeuralNetwork::Create_in_Factory(
-		const long inputno, const long outputno,
-		float learning_rate, ActivationFunc func_type)
+NeuralNetwork NeuralNetwork::Create_in_Factory(	/* 工厂模式 通过形状构建全连接层 */
+	const long inputno, const long outputno,
+	float learning_rate, ActivationFunc func_type)
 {
     std::vector<float> weights(inputno * outputno);
     xavierUniformInit(weights, inputno, outputno);
@@ -135,9 +108,8 @@ void NeuralNetwork::save(std::ostream& out)
 }
 
 
-/* 前向反馈 */
-std::vector<float> NeuralNetwork::forward(const std::vector<float>& x)
-    
+std::vector<float> NeuralNetwork::forward(	/* 前向反馈 */
+	const std::vector<float>& x)
 {
 
 
@@ -207,8 +179,8 @@ std::vector<float> NeuralNetwork::forward(const std::vector<float>& x)
 }
 
 
-/* 反向传播 */
-std::vector<float> NeuralNetwork::backward(const std::vector<float>& errors)  /* errors => (outputs, 1) */
+std::vector<float> NeuralNetwork::backward(	/* 反向传播 */
+	const std::vector<float>& errors)  /* errors => (outputs, 1) */
 
 {
 
@@ -274,6 +246,7 @@ std::vector<float> NeuralNetwork::backward(const std::vector<float>& errors)  /*
     //return std::move(uplevel_errors);
 }
 
+/* NOTE: discount（折扣）是为了方便深度强化学习给出奖励值 */
 void NeuralNetwork::update(float discount) {
     this->weights = this->weights + (this->weights_grad * this->learning_rate * discount);
     this->bias    = this->bias    + (this->bias_grad    * this->learning_rate * discount);
