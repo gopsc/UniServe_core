@@ -25,25 +25,53 @@ using f_t = std::function<void(Thread&)>;
 class Thread {
 public:
 
-    /* 作为可变的函数，持有回调可能比继承更好
-     *
-     * FIXME: 可以改为链式传递参数 */
-    Thread(f_t stop_callback, f_t wake_callback, f_t loop_callback, f_t clear_callback);
+	/* 作为可变的函数，持有回调可能比继承更好
+	 *
+	 * FIXME: 可以改为链式传递参数 */
+	Thread(f_t stop_callback, f_t wake_callback, f_t loop_callback, f_t clear_callback);
 
-    /*
-     * 删除复制构造函数。
-     *
-     * 因为持有线程类，不要轻举妄动。
-     */
-    Thread(const Thread&) = delete;
+	/* 使用默认初始化方法，然后用几个函数分别进行回调初始化 */
+	Thread() =  default;
+
+	/*
+	 * 删除复制构造函数。
+	 *
+	 * 因为持有线程类，不要轻举妄动。
+	 */
+	Thread(const Thread&) = delete;
 
 
-    /*
-     * 虚析构函数
-     *
-     * FIXME: 具体有什么用，忘了
-     */
-    virtual ~Thread() {}
+	/*
+	 * 虚析构函数
+	 *
+	 * FIXME: 具体有什么用，忘了
+	 */
+	virtual ~Thread() {}
+
+
+	/* 设置停止回调函数 */
+	void set_stop(f_t callback); //{
+    
+	//	StopEvent = std::make_unique<f_t>(callback);
+	//}
+
+	/* 设置唤醒回调函数 */
+	void set_wake(f_t callback); //{
+		
+	//	WakeEvent = std::make_unique<f_t>(callback);
+	//}
+
+	/* 设置循环体回调函数 */
+	void set_loop(f_t callback); //{
+	
+	//	LoopEvent = std::make_unique<f_t>(callback);
+	//}
+
+	/* 设置清理回调函数 */
+	void set_clear(f_t callback); //{
+
+	//	ClearEvent = std::make_unique<f_t> (callback);
+	//}
 
     /*-----------------------------------*/
     /*-----------------------------------*/

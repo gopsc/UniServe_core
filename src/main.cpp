@@ -115,7 +115,7 @@ public:
 /* 构造【通信任务】
  * msglen: 单条消息的长度
  * msgcnt: 消息伺服长度
- * callback: 回调函数 */
+ * callback: 回调函数  */
 Tttask(const size_t msglen, size_t msgcnt, const sf_t callback)
 : msglen(msglen), msgcnt(msgcnt) {
 	this->callback = std::make_unique<sf_t>(callback); /* FIXME: 使用指针似乎有所不妥 */
@@ -124,8 +124,8 @@ Tttask(const size_t msglen, size_t msgcnt, const sf_t callback)
 
 /* 启动该通信伺服任务 */
 void start() override {
-	if (!this->isRunning())
-	{
+	if (!this->isRunning()) {
+
 		th->Activate();  /* FIXME: 这里获取了资源，不知道会不会造成内存泄漏 */
 		th->WaitStart(); /* TODO: add timeout 增加超时 */
 	}

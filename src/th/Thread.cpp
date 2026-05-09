@@ -9,6 +9,25 @@ namespace qing{
 		ClearEvent = std::make_unique<f_t>(clear_callback);
 	};
 
+	void Thread::set_stop(f_t callback) {
+		StopEvent = std::make_unique<f_t> (callback);
+	}
+
+	void Thread::set_wake(f_t callback) {
+		WakeEvent = std::make_unique<f_t> (callback);
+	}
+
+	void Thread::set_loop(f_t callback) {
+		LoopEvent = std::make_unique<f_t> (callback);
+	}
+
+	void Thread::set_clear(f_t callback) {
+		ClearEvent = std::make_unique<f_t> (callback);
+	}
+
+
+
+
     /* 线程主函数 */
     void Thread::main() {
 
@@ -18,6 +37,7 @@ namespace qing{
             try { /* 异常只会使线程静止 */
 
 
+		//------------------------------------------------
                 while (check() == Fsm::Stat::STOP) {
                     (*StopEvent)(*this);	/* 静止状态 */
                 }
@@ -34,6 +54,7 @@ namespace qing{
                 /* 清理事件 （记得检查成员变量有没有被设置） */
                 (*ClearEvent)(*this);
 		
+		//------------------------------------------------
 
             }
 
