@@ -1,13 +1,13 @@
 #include "th/Thread.hpp"
 namespace qing{
 
-	Thread::Thread(f_t stop_callback, f_t wake_callback, f_t loop_callback, f_t clear_callback)
-        {
-		StopEvent = std::make_unique<f_t>(stop_callback);
-		WakeEvent = std::make_unique<f_t>(wake_callback);
-		LoopEvent = std::make_unique<f_t>(loop_callback);
-		ClearEvent = std::make_unique<f_t>(clear_callback);
-	};
+	//Thread::Thread(f_t stop_callback, f_t wake_callback, f_t loop_callback, f_t clear_callback)
+        //{
+	//	StopEvent = std::make_unique<f_t>(stop_callback);
+	//	WakeEvent = std::make_unique<f_t>(wake_callback);
+	//	LoopEvent = std::make_unique<f_t>(loop_callback);
+	//	ClearEvent = std::make_unique<f_t>(clear_callback);
+	//};
 
 	void Thread::set_stop(f_t callback) {
 		StopEvent = std::make_unique<f_t> (callback);

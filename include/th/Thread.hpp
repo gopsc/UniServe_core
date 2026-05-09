@@ -28,7 +28,7 @@ public:
 	/* 作为可变的函数，持有回调可能比继承更好
 	 *
 	 * FIXME: 可以改为链式传递参数 */
-	Thread(f_t stop_callback, f_t wake_callback, f_t loop_callback, f_t clear_callback);
+	//Thread(f_t stop_callback, f_t wake_callback, f_t loop_callback, f_t clear_callback);
 
 	/* 使用默认初始化方法，然后用几个函数分别进行回调初始化 */
 	Thread() =  default;
