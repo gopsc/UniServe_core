@@ -24,6 +24,12 @@ long NeuralNetwork::get_outputno() const {
     return this->outputno;
 }
 
+const ActivationFunc& NeuralNetwork::get_f() const
+{ return f_type;  }
+
+const float& NeuralNetwork::get_lr () const
+{  return learning_rate;  }
+
 /* 获取权重 */
 Matrx<float>& NeuralNetwork::get_weights() {
 	return this->weights;
