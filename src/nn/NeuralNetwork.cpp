@@ -140,7 +140,7 @@ std::vector<float> NeuralNetwork::forward(	/* 前向反馈 */
     this->prev_inputs = mx;  /* (1, inputs) */
 
 
-    Matrx<float>r = mx * this->weights;  /* (1, outputs) */
+    Matrx<float>r = mx.dot(this->weights);  /* (1, outputs) */
 
     /* 偏置操作 */
     //for (long i=0; i<this->outputno; ++i) {
@@ -210,7 +210,7 @@ std::vector<float> NeuralNetwork::backward(	/* 反向传播 */
     //    }
     //}
     Matrx<float> mx {this->inputno, 1, this->prev_inputs.get_data()};  /* (inputs, 1) */
-    this->weights_grad = mx * first;  /* (inputs, 1) @ (1, outputs) => (inputs, outputs) */
+    this->weights_grad = mx.dot(first);  /* (inputs, 1) @ (1, outputs) => (inputs, outputs) */
 
     /*
      * 更新偏置梯度
@@ -239,7 +239,7 @@ std::vector<float> NeuralNetwork::backward(	/* 反向传播 */
     //    uplevel_errors[i] = sum;
     //}
     Matrx<float> first1{this->outputno, 1, first.get_data()};
-    Matrx<float> uplevel_errs = this->weights * first1;  /* (inputs, outputs) @ (outputs, 1) */
+    Matrx<float> uplevel_errs = this->weights.dot(first1);  /* (inputs, outputs) @ (outputs, 1) */
     return uplevel_errs.get_data();
 
     /* 使用移动语义返回上一层误差 */
