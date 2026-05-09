@@ -5,7 +5,7 @@
 #include "nn/Matrix.hh"
 #include "nn/NNBuilder.hpp"
 using namespace qing;
-int main() {
+int main() { /* 与门测试 */
 
 	NNBuilder nn;
 	using nnl = NeuralNetwork;
