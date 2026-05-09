@@ -25,6 +25,77 @@ namespace qing{
 		ClearEvent = std::make_unique<f_t> (callback);
 	}
 
+ 
+	Fsm::Stat Thread::check() {
+		return fsm.check();
+	}
+
+	void Thread::suspend() {
+		fsm.suspend();
+	}
+
+        /* 唤醒函数不可以进行该类中的锁操作，否则会造成死锁  */
+	void Thread::wake() {
+		//{
+			//std::lock_guard<std::mutex> lk(mtx_th);
+			fsm.set(Fsm::Stat::START);
+			//ready = true;
+		//}
+		//cv.notify_all();
+	} /* wake */
+
+	/* 上锁、唤醒阻塞的线程 */
+	void Thread::stop() {
+		{
+			std::lock_guard<std::mutex> lk(mtx_th);
+			fsm.set(Fsm::Stat::STOP);
+			ready = true;
+		}
+		/* 可能会出现多个线程在等待的情况 */
+		cv.notify_all();
+	}/* stop */
+
+	void Thread::shut() {
+		{
+			std::lock_guard<std::mutex> lk(mtx_th);
+			fsm.set(Fsm::Stat::SHUT);
+			ready = true;
+		}
+		cv.notify_all();
+	} /*shut*/
+	
+	void Thread::run() {
+		{
+			std::lock_guard<std::mutex> lk(mtx_th);
+			fsm.set(Fsm::Stat::RUNNING);
+			ready = true;
+		}
+		cv.notify_all();
+	}/*run*/
+
+	void Thread::Activate() {
+
+		/* 防止重复初始化
+		 * FIXME: 抛出异常？感觉也不太合适 */
+		if (th) return; 
+
+		/* 申请线程资源 */
+		th = std::make_unique<std::thread>(&Thread::main, this);
+
+	}
+
+	void Thread::WaitStart() {
+		std::unique_lock<std::mutex> lk(mtx_th);	/* 不进入临界区可能会造成死等，在唤醒过程非常短暂的情况下 */
+		wake(); 	/* 这就是为什么wake()不可以获取临界区，否则会造成死锁 */
+		ready = false;	/* 这个临界区结束后，WakeEvent()中的run()会唤醒线程的堵塞 */
+		cv.wait(lk, [this] { return ready; });
+	}
+
+	void Thread::WaitClose() {
+		shut();
+		if (th->joinable())
+			th->join();
+	}
 
 
 
