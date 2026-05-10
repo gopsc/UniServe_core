@@ -31,12 +31,14 @@ all: ${APP_NAME}.out
 ${APP_NAME}.out: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o
 	$(CPP) $^ $(LIBS) -o $@
 
-test: test.out
-test.out: $(BUILD_DIR)/I2C.o $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/NNBuilder.o src/test.cpp
+test: test_nn.out test_i2c.out
+test_nn.out: $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/NNBuilder.o src/test_nn.cpp
+	$(CPP) $^ $(INCS) -o $@
+test_i2c.out: $(BUILD_DIR)/I2C.o $(BUILD_DIR)/PCA9685.o $(BUILD_DIR)/MPU6050.o src/test_i2c.cpp
 	$(CPP) $^ $(INCS) -o $@
 
-icl:
-lci.out: $(BUILD_DIR)/mainLci.o $(BUILD_DIR)/ansi.o $(BUILD_DIR)/utf8.o $(BUILD_DIR)/fsm.o $(BUILD_DIR)/Color.o $(BUILD_DIR)/ku500.o $(BUILD_DIR)/CommonThread.o $(BUILD_DIR)/Drawable.o $(BUILD_DIR)/Area.o $(BUILD_DIR)/FrameBuf.o $(BUILD_DIR)/mem.o $(BUILD_DIR)/I2C.o $(BUILD_DIR)/PCA9685.o $(BUILD_DIR)/MPU6050.o $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/NNBuilder.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/Thread.o
+lci: lci.out
+lci.out: $(BUILD_DIR)/mainLci.o $(BUILD_DIR)/ansi.o $(BUILD_DIR)/utf8.o $(BUILD_DIR)/fsm.o $(BUILD_DIR)/Color.o $(BUILD_DIR)/ku500.o $(BUILD_DIR)/CommonThread.o $(BUILD_DIR)/Drawable.o $(BUILD_DIR)/Area.o $(BUILD_DIR)/FrameBuf.o $(BUILD_DIR)/mem.o $(BUILD_DIR)/Thread.o
 	$(CPP) $^ $(LIBS) -ljpeg -lpng  -o $@
 
 agent:

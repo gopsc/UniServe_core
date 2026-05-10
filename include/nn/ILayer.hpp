@@ -3,6 +3,8 @@
 #include <iostream>
 /* FIXME: 设置为每层可调节的 */
 /* FIXME: 现在这个“接口”并未提供抽象函数 */
+/* TODO(20260510-qing): 修改为输入整个向量，然后做激活、求导
+ * 然后设计Softmax激活函数 */
 constexpr float LEAKY_RELU_ALPHA = 0.01;
 using f_t = float(*)(float); /* FIXME: 在qing::Thread附近已经定义了f_t标识符 */
 

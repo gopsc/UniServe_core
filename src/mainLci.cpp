@@ -379,13 +379,14 @@ namespace qing {
 
 	void LciTask::init_thread() {
 
-		/* 静止事件 */
-		f_t StopEvent  = [](Thread& th) {
-			th.suspend();
-		};
 
-		/* 启动事件 */
-		f_t StartEvent = [this] (Thread& th) {
+		this->th = std::make_unique<Thread>();
+
+		this->th->set_stop([](Thread& th) { 	/* 设置静止事件 */
+			th.suspend();
+		});
+
+		this->th->set_wake([this] (Thread& th) {	/* 启动事件 */
 		
 			this->term = std::make_unique<Term>(TARGET_TTY, ORIGIN_TTY);
 			this->fb = std::make_unique<FrameBuf>("/dev/fb0", rotate, fontsize);
@@ -486,10 +487,10 @@ namespace qing {
 			//printTask->WaitStart(10000);  /* FIXME: 使用新版的线程类 */
 		
 			th.run();
-		};
+		});
 
 		
-		f_t LoopEvent = [this](Thread& th) {
+		this->th->set_loop([this](Thread& th) {
 		
 			//try {
 
@@ -718,21 +719,17 @@ namespace qing {
 
 
 			usleep(1000000);
-		};
+		});
 
 
-		f_t ClearEvent = [this](Thread& th)
+		this->th->set_clear([this](Thread& th)
 		{
 			//printTask.reset();
 			//cmd.reset();
 			poolArea.reset();
 			tableArea.reset();
 			term.reset();
-		};
-
-		this->th = std::make_unique<Thread>(
-			StopEvent, StartEvent, LoopEvent, ClearEvent
-		);
+		});
 
 
 

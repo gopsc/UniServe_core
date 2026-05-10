@@ -1,5 +1,13 @@
 #ifndef I2C_H
 #define I2C_H
+/*
+ * # 安装工具
+ * apt install i2c-tools libi2c-dev
+ *
+ * # 扫描设备
+ * i2cdetect -y 1
+ */
+
 /* 基本I2C */
 bool I2C_check();
 void I2C_init(const char* path);
