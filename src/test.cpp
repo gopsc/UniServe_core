@@ -1,3 +1,7 @@
+/* 全连接神经网络 - 与门测试
+ * 数据随机生成
+ */
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
