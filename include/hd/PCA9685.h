@@ -1,8 +1,17 @@
 #ifndef PCA9685_H
 #define PCA9685_H
-/* PCA9685 */
-bool PCA9685_check();
-void PCA9685_init();
-void PCA9685_setPWM(uint8_t channel, uint16_t on, uint16_t off);
-void PCA9685_setAngle(uint8_t channel, float angle);
+namespace qing {
+class PCA9685 {	/* PCA9685 */
+public:
+	PCA9685(I2C& i2c);
+	PCA9685(const PCA9685&) = delete;
+	bool check();
+	void setPWM(uint8_t channel, uint16_t on, uint16_t off);
+	void setAngle(uint8_t channel, float angle);
+private:
+	static constexpr uint8_t PCA9685_ADDR = 0x40;	/* 7位地址 */
+	bool flag = false;	/* 启动标志 */
+	I2C& i2c;
+};
+}
 #endif

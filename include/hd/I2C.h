@@ -8,13 +8,21 @@
  * i2cdetect -y 1
  */
 
-/* 基本I2C */
-bool I2C_check();
-void I2C_init(const char* path);
-void I2C_free();
-void I2C_lock(); /* FIXME: 使用锁类 */
-void I2C_unlock();
-void I2C_setAddr(const uint8_t addr);
-void I2C_writeReg(uint8_t reg, uint8_t val);
-uint8_t I2C_readReg(uint8_t reg);
+namespace qing {
+class I2C {	/* 基本I2C */
+private:
+	int fd = -1;
+	pthread_mutex_t mutex;	/* FIXME: 这个锁我们只提供接口给外部使用？ */
+public:
+	I2C(const char* path);
+	I2C(const I2C&) = delete;	/* 删除复制构造函数 */
+	~I2C();
+	bool check();
+	void lock(); /* FIXME: 使用锁类 */
+	void unlock();
+	void setAddr(const uint8_t addr);
+	void writeReg(uint8_t reg, uint8_t val);
+	uint8_t readReg(uint8_t reg);
+};
+}
 #endif
