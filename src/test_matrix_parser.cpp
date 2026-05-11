@@ -1,6 +1,6 @@
-#include <code/MatrixObject.h>
+#include <code/MatrixParser.h>
 using namespace qing;
 int main() {
-	auto mto = MatrixObject();
-	mto.fromFile("scripts/test.mt");
+	auto parser = MatrixParser();
+	parser.fromFile("scripts/test.mt");
 }

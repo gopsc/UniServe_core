@@ -4,8 +4,9 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <map>
 namespace qing {
-class MatrixObject {	/* 矩阵式对象 */
+class MatrixParser {	/* 矩阵式对象 */
 public:
 	void fromStdin()	/* 解析标准输入中的动作脚本 */
 	{
@@ -36,12 +37,13 @@ public:
 	std::string& get_name() { return name; }
 
 private:
+	std::map<std::string, std::vector<std::vector<std::string>>> M;
+	std::vector<std::vector<std::string>> data;
+	std::vector<std::string> arr;  /* 临时使用 */
 	char word[16] = {0}; /* FIXME: 这个栈有越界风险 */
 	int top = 0;
 	int count = 0;
 	std::string name = "";
-	std::vector<std::vector<std::string>> data;
-	std::vector<std::string> arr;  /* 临时使用 */
 	void _parse(std::istream& src) {	/* 进行脚本解析 */
 		_clear_tmp();
 		char c = 0;
@@ -53,6 +55,9 @@ private:
 			std::cout << c;
 			/*---- NAME 命名 ----*/
 			if (!comment_flag && !named_flag && c == '@') {
+				if (name != "") { /* TODO: 用函数封装、添加重复定义检测 */
+					_submit_data();
+				}
 				named_flag = true;
 			}
 			else if (named_flag && c == '\n') {
@@ -89,6 +94,11 @@ private:
 				word[top++] = c;
 			}
 		}
+
+		/* 插入最后一个 */
+		if (name != "") {
+			_submit_data();
+		}
 	}
 
 	void _clear_tmp() {	/* 清空临时容器变量 */
@@ -116,6 +126,13 @@ private:
 	void _submit_arr() {	/* 提交数组 */
 		data.push_back(arr);
 		arr.clear();
+	}
+
+	void _submit_data() {
+		//std::cout << name << std::endl;
+		M[name]  = std::move(data);
+		_clear_all();
+		name = "";
 	}
 };
 }
