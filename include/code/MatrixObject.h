@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 namespace qing {
-class MatrixParser {
+class MatrixObject {	/* 矩阵式对象 */
 public:
 	void fromStdin()	/* 解析标准输入中的动作脚本 */
 	{
@@ -34,6 +34,7 @@ public:
 	}
 
 private:
+	std::string name = "";
 	std::vector<std::vector<std::string>> data;
 	std::vector<std::string> arr;  /* 临时使用 */
 	char word[16] = {0}; /* FIXME: 这个栈有越界风险 */
@@ -45,15 +46,29 @@ private:
 		char c = 0;
 		bool end_flag = false;
 		bool comment_flag = false;
+		bool named_flag = false;
 		while (!end_flag) {
 			end_flag = !(bool)src.get(c);
 			std::cout << c;
+			/*---- NAME 命名 ----*/
+			if (!comment_flag && !named_flag && c == '@') {
+				named_flag = true;
+			}
+			else if (named_flag && c == '\n') {
+				comment_flag = false;
+				named_flag = false;
+				count ++;
+			}
+			else if (named_flag) {
+				name += c;
+			}
 			/*---- COMMENT 注释 ----*/
-			if (!comment_flag && c == '#') {	/* 注释以井号#开头 */
+			else if (!comment_flag && c == '#') {	/* 注释以井号#开头 */
 				comment_flag = true;
 			}
 			else if (comment_flag && c == '\n') {	/* 注释以换行符结尾 */
 				comment_flag = false;
+				count ++;
 			}
 			else if (comment_flag && c != '\n') {	/* 注释内容被忽略 */
 				;
@@ -67,7 +82,7 @@ private:
 				if (arr.size() > 0) _submit_arr();
 			}
 			else if (!comment_flag && (c == '\n' || c == '\r')) {
-				;
+				count ++;
 			}
 			else if (!comment_flag) {
 				word[top++] = c;
