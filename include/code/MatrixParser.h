@@ -34,7 +34,22 @@ public:
 		_parse(ss);
 	}
 
-	std::string& get_name() { return name; }
+	/* 访问器函数，这个函数是用键值访问矩阵 */
+	std::vector<std::vector<std::string>>& operator [](const std::string& key)
+	{ return M[key]; }
+
+	/* 访问器函数，这个函数用于返回矩阵的行数 */
+	std::vector<std::vector<std::string>>::size_type get_row(const std::string& key)
+	{ return M[key].size(); }
+
+	/* 访问器函数，这个函数用于返回矩阵的列数 */
+	std::vector<std::string>::size_type get_col(const std::string& key) {
+		return M[key][0].size();
+	}
+
+	/* 访问器函数，获取哈希表中的矩阵数量 */
+	std::map<std::string, std::vector<std::vector<std::string>>>::size_type size() 
+	{ return M.size(); }
 
 private:
 	std::map<std::string, std::vector<std::vector<std::string>>> M;
@@ -124,6 +139,9 @@ private:
 	}
 
 	void _submit_arr() {	/* 提交数组 */
+		if (data.size() > 0 && arr.size() != data[0].size())
+			throw std::invalid_argument(
+				"The line does not match, at line " + std::to_string(count));
 		data.push_back(arr);
 		arr.clear();
 	}
