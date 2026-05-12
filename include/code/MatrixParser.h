@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <ranges>
 namespace qing {
 class MatrixParser {	/* 矩阵式对象 */
 public:
@@ -36,20 +37,29 @@ public:
 
 	/* 访问器函数，这个函数是用键值访问矩阵 */
 	std::vector<std::vector<std::string>>& operator [](const std::string& key)
-	{ return M[key]; }
+	{ return M.at(key); }
 
 	/* 访问器函数，这个函数用于返回矩阵的行数 */
-	std::vector<std::vector<std::string>>::size_type get_row(const std::string& key)
-	{ return M[key].size(); }
+	std::vector<std::vector<std::string>>::size_type row(const std::string& key)
+	{ return M.at(key).size(); }
 
 	/* 访问器函数，这个函数用于返回矩阵的列数 */
-	std::vector<std::string>::size_type get_col(const std::string& key) {
+	std::vector<std::string>::size_type col(const std::string& key) {
+		if (M.at(key).size() == 0)
+			return 0;
 		return M[key][0].size();
 	}
 
 	/* 访问器函数，获取哈希表中的矩阵数量 */
 	std::map<std::string, std::vector<std::vector<std::string>>>::size_type size() 
 	{ return M.size(); }
+
+	/* 访问器函数，获取所有矩阵的名字 */
+	std::vector<std::string> keys() {
+		auto keys_view = std::views::keys(M);
+		std::vector<std::string> ks(keys_view.begin(), keys_view.end());
+		return ks;
+	}
 
 private:
 	std::map<std::string, std::vector<std::vector<std::string>>> M;
@@ -142,13 +152,15 @@ private:
 		if (data.size() > 0 && arr.size() != data[0].size())
 			throw std::invalid_argument(
 				"The line does not match, at line " + std::to_string(count));
-		data.push_back(arr);
-		arr.clear();
+		if (arr.size() > 0) {
+			data.push_back(arr);
+			arr.clear();
+		}
 	}
 
 	void _submit_data() {
 		//std::cout << name << std::endl;
-		M[name]  = std::move(data);
+		M[name]  = data;
 		_clear_all();
 		name = "";
 	}
