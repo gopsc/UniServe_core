@@ -154,7 +154,7 @@ $(BUILD_DIR)/MatrixParser.o: src/code/MatrixParser.cpp
 
 
 
-install: $(APP_NAME)
+install: $(APP_NAME).out
 	@echo "正在安装 $(APP_NAME) 到$(INSTL_DIRS)"
 	@
 	#@mkdir -p $(INSTL_DIRS)
