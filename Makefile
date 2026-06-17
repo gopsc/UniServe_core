@@ -16,7 +16,8 @@ CPP:= g++
 
 INCS:= -I include/
 
-LIBS := -lpthread -lssl -lcrypto -lboost_program_options -lboost_json -lboost_system -lboost_thread
+#LIBS := -lpthread -lssl -lcrypto -lboost_program_options -lboost_json -lboost_system -lboost_thread
+LIBS := -lpthread -lssl -lcrypto -lboost_program_options -lboost_json -lboost_thread -lboost_process -lboost_filesystem
 
 CPPFLAGS := --std=c++20 -O3 -pipe #-Wall -Werror
 
