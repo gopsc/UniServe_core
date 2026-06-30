@@ -29,7 +29,7 @@ $(shell mkdir -p $(BUILD_DIR))
 #	$(CPP)  -shared -fPIC $^ $(LIBS) -o $@
 
 all: ${APP_NAME}.out
-${APP_NAME}.out: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o
+${APP_NAME}.out: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o $(BUILD_DIR)/PPool.o $(BUILD_DIR)/ProcessTask.o $(BUILD_DIR)/Tttask.o $(BUILD_DIR)/HttpTask.o $(BUILD_DIR)/pmc_mtd.o $(BUILD_DIR)/subsys_call.o
 	$(CPP) $^ $(LIBS) -o $@
 
 test: test_nn.out test_i2c.out test_matrix_parser.out
@@ -151,6 +151,24 @@ $(BUILD_DIR)/WebSocketClient.o: src/net/WebSocketClient.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/MatrixParser.o: src/code/MatrixParser.cpp
+	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
+
+$(BUILD_DIR)/PPool.o: src/main/PPool.cpp
+	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
+
+$(BUILD_DIR)/ProcessTask.o: src/main/ProcessTask.cpp
+	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
+
+$(BUILD_DIR)/Tttask.o: src/main/Tttask.cpp
+	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
+
+$(BUILD_DIR)/HttpTask.o: src/main/HttpTask.cpp
+	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
+
+$(BUILD_DIR)/pmc_mtd.o: src/main/pmc_mtd.cpp
+	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
+
+$(BUILD_DIR)/subsys_call.o: src/main/subsys_call.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 

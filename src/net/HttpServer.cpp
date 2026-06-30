@@ -78,6 +78,7 @@ public:
         : ioc_(ioc), acceptor_(ioc), server_(server) {
         beast::error_code ec;
         acceptor_.open(endpoint.protocol(), ec);
+        
         if (!ec) {
             acceptor_.set_option(asio::socket_base::reuse_address(true), ec);
             acceptor_.bind(endpoint, ec);
@@ -146,6 +147,7 @@ void HttpServer::start() {
         
         // 创建监听器
         listener_ = std::make_shared<Listener>(*ioc_, endpoint, this);
+
         if (!listener_) {
             throw std::runtime_error("Failed to create listener");
         }

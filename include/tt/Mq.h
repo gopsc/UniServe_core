@@ -12,8 +12,8 @@
 
 namespace qing {
 namespace bip = boost::interprocess;
-using sf_t = std::function<void(const char*)>; /* success */
-using ef_t = std::function<void(void)>;        /* error */
+using sf_t = std::function<void(const char*)>; /* 通信成功的回调函数 success */
+using ef_t = std::function<void(void)>;        /* 通信失败的回调函数 error */
 class Mq {
 public:
 	enum {CREATOR=0, USER=1};

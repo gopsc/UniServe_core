@@ -16,6 +16,8 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <mutex>
+#include <chrono>
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -78,7 +80,7 @@ public:
     void start();
     
     /**
-     * @brief 停止服务器
+     * @brief 停止服务器 不要在工作线程调用
      */
     void stop();
     
@@ -180,11 +182,20 @@ private:
     // 静态文件目录
     std::string static_directory_;
     
+    // 会话管理
+    std::vector<std::weak_ptr<Session>> sessions_;
+    std::mutex sessions_mutex_;
+    
     // 内部方法
     std::unordered_map<std::string, std::string> parseQueryParams(const std::string& query);
     
     // 请求处理
     http::response<http::string_body> handleRequest(const http::request<http::string_body>& req);
+    
+    // 会话管理
+    void addSession(const std::shared_ptr<Session>& session);
+    void removeSession(const Session* session);
+    void closeAllSessions();
 };
 
 } // namespace net

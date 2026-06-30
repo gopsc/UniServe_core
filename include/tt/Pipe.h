@@ -7,7 +7,9 @@
 #include <sys/select.h>
 
 namespace qing {
-class Pipe{  /* 20260309(qing): 该类不会抛出异常 */
+
+/* 20260309(qing): 该类不会抛出异常 */
+class Pipe{  
 public:
 	static const int CREATOR = 1;
         static const int USER =2;
