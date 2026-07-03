@@ -32,21 +32,6 @@ all: ${APP_NAME}.out
 ${APP_NAME}.out: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o $(BUILD_DIR)/PPool.o $(BUILD_DIR)/ProcessTask.o $(BUILD_DIR)/Tttask.o $(BUILD_DIR)/HttpTask.o $(BUILD_DIR)/pmc_mtd.o $(BUILD_DIR)/subsys_call.o
 	$(CPP) $^ $(LIBS) -o $@
 
-$(BUILD_DIR)/mainLci.o:  src/mainLci.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/mainMybot.o:  src/mainMybot.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/mainAgent.o:  src/mainAgent.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/mainNn.o: src/mainNn.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/mainCamera.o: src/mainCamera.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
 $(BUILD_DIR)/main.o:  src/main.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
@@ -68,15 +53,6 @@ $(BUILD_DIR)/Camera.o:  src/hd/Camera.cpp
 $(BUILD_DIR)/Matrix.o:  src/nn/Matrix.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
-$(BUILD_DIR)/NeuralNetwork.o: src/nn/NeuralNetwork.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/NNBuilder.o: src/nn/NNBuilder.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/ILayer.o: src/nn/ILayer.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
 $(BUILD_DIR)/Thread.o: src/th/Thread.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
@@ -87,6 +63,9 @@ $(BUILD_DIR)/WebSocketClient.o: src/net/WebSocketClient.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/MatrixParser.o: src/code/MatrixParser.cpp
+	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
+
+$(BUILD_DIR)/Crypto_Basic.o: src/Crypto/Crypto_Basic.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/PPool.o: src/main/PPool.cpp
