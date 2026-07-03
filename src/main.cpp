@@ -26,9 +26,9 @@
 #include <boost/property_tree/ptree.hpp>
 
 #include "logs/Logger.hpp"
-#include "th/Thread.hpp"
-#include "th/Cv_wait.hpp"
-#include "th/ITask.hpp"
+#include <us/Thread.hpp>
+#include <us/Cv_wait.hpp>
+#include <us/ITask.hpp>
 #include "tt/Pipe.h"
 #include "main/Tttask.hh"
 #include "main/HttpTask.hh"

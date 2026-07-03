@@ -1,7 +1,7 @@
 #include <iostream>
 #include <memory>
-#include "th/Thread.hpp"
-#include "th/ITask.hpp"
+#include <us/Thread.hpp>
+#include <us/ITask.hpp>
 #include "main/Tttask.hh"
 
 namespace qing {
