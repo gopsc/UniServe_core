@@ -32,31 +32,6 @@ all: ${APP_NAME}.out
 ${APP_NAME}.out: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o $(BUILD_DIR)/PPool.o $(BUILD_DIR)/ProcessTask.o $(BUILD_DIR)/Tttask.o $(BUILD_DIR)/HttpTask.o $(BUILD_DIR)/pmc_mtd.o $(BUILD_DIR)/subsys_call.o
 	$(CPP) $^ $(LIBS) -o $@
 
-test: test_nn.out test_i2c.out test_matrix_parser.out
-test_nn.out: $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/NNBuilder.o src/test_nn.cpp
-	$(CPP) $(CPPFALGS) $^ $(INCS) -o $@
-test_i2c.out: $(BUILD_DIR)/I2C.o $(BUILD_DIR)/PCA9685.o $(BUILD_DIR)/MPU6050.o src/test_i2c.cpp
-	$(CPP) $(CPPFLAGS) $^ $(INCS) -o $@
-test_matrix_parser.out: src/test_matrix_parser.cpp
-	$(CPP) $(CPPFLAGS) $^ $(INCS) -o $@
-
-
-lci: lci.out
-lci.out: $(BUILD_DIR)/mainLci.o $(BUILD_DIR)/ansi.o $(BUILD_DIR)/utf8.o $(BUILD_DIR)/fsm.o $(BUILD_DIR)/Color.o $(BUILD_DIR)/ku500.o $(BUILD_DIR)/CommonThread.o $(BUILD_DIR)/Drawable.o $(BUILD_DIR)/Area.o $(BUILD_DIR)/FrameBuf.o $(BUILD_DIR)/mem.o $(BUILD_DIR)/Thread.o
-	$(CPP) $^ $(LIBS) -ljpeg -lpng  -o $@
-
-agent:
-agent.out: $(BUILD_DIR)/mainAgent.o $(BUILD_DIR)/WebSocketClient.o
-	$(CPP) $^ $(LIBS) -lcurl -o $@
-
-nn:
-nn.out: $(BUILD_DIR)/mainNn.o $(BUILD_DIR)/Camera.o $(BUILD_DIR)/NeuralNetwork.o $(BUILD_DIR)/Matrix.o $(BUILD_DIR)/ILayer.o $(BUILD_DIR)/NNBuilder.o
-	$(CPP) $^ $(LIBS) -ljpeg  -o $@
-
-camera:
-camera.out: $(BUILD_DIR)/mainCamera.o $(BUILD_DIR)/Camera.o
-	$(CPP) $^ $(LIBS) -ljpeg -o $@
-
 $(BUILD_DIR)/mainLci.o:  src/mainLci.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
@@ -73,42 +48,6 @@ $(BUILD_DIR)/mainCamera.o: src/mainCamera.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/main.o:  src/main.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/ansi.o:  src/lci/ansi.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/utf8.o:  src/lci/utf8.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/fsm.o:  src/lci/fsm.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/Color.o:  src/lci/Color.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/ku500.o:  src/lci/ku500.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/CommonThread.o:  src/lci/CommonThread.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/Drawable.o:  src/lci/Drawable.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/Area.o:  src/lci/Area.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-#$(BUILD_DIR)/CmdArea.o:  src/lci/CmdArea.cpp
-#	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-#$(BUILD_DIR)/InputBox.o:  src/lci/InputBox.cpp
-#	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-#$(BUILD_DIR)/KeyboardEvent.o:  src/lci/KeyboardEvent.cpp
-#	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/FrameBuf.o:  src/lci/FrameBuf.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/mem.o:  src/hd/mem.cpp
@@ -139,9 +78,6 @@ $(BUILD_DIR)/ILayer.o: src/nn/ILayer.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/Thread.o: src/th/Thread.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/LciTask.o: src/LciTask.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/HttpServer.o: src/net/HttpServer.cpp
