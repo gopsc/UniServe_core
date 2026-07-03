@@ -16,8 +16,8 @@ CPP:= g++
 
 INCS:= -I include/
 
-#LIBS := -lpthread -lssl -lcrypto -lboost_program_options -lboost_json -lboost_system -lboost_thread
-LIBS := -lpthread -lssl -lcrypto -lboost_program_options -lboost_json -lboost_thread -lboost_process -lboost_filesystem
+MY_LIBS := -L/usr/local/lib -lus_th
+LIBS := -lpthread -lssl -lcrypto -lboost_program_options -lboost_json -lboost_thread -lboost_process -lboost_filesystem 
 
 CPPFLAGS := --std=c++20 -O3 -pipe #-Wall -Werror
 
@@ -29,8 +29,8 @@ $(shell mkdir -p $(BUILD_DIR))
 #	$(CPP)  -shared -fPIC $^ $(LIBS) -o $@
 
 all: ${APP_NAME}.out
-${APP_NAME}.out: $(BUILD_DIR)/main.o  $(BUILD_DIR)/Thread.o $(BUILD_DIR)/HttpServer.o $(BUILD_DIR)/PPool.o $(BUILD_DIR)/ProcessTask.o $(BUILD_DIR)/Tttask.o $(BUILD_DIR)/HttpTask.o $(BUILD_DIR)/pmc_mtd.o $(BUILD_DIR)/subsys_call.o
-	$(CPP) $^ $(LIBS) -o $@
+${APP_NAME}.out: $(BUILD_DIR)/main.o $(BUILD_DIR)/HttpServer.o $(BUILD_DIR)/PPool.o $(BUILD_DIR)/ProcessTask.o $(BUILD_DIR)/Tttask.o $(BUILD_DIR)/HttpTask.o $(BUILD_DIR)/pmc_mtd.o $(BUILD_DIR)/subsys_call.o
+	$(CPP) $^ $(LIBS) $(MY_LIBS) -o $@
 
 $(BUILD_DIR)/main.o:  src/main.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
@@ -51,9 +51,6 @@ $(BUILD_DIR)/Camera.o:  src/hd/Camera.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/Matrix.o:  src/nn/Matrix.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/Thread.o: src/th/Thread.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/HttpServer.o: src/net/HttpServer.cpp
@@ -119,6 +116,6 @@ uninstall:
 	@
 	@echo "卸载完成！"
 
-clean:
+clear:
 	@rm -rvf $(BUILD_DIR)
 	@rm -vf *.out
