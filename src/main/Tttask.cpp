@@ -48,12 +48,12 @@ namespace qing {
         /* loop callback 循环事件 */
         this->th->set_loop(  [this](Thread& th) -> void {
                 
-        
                 /* 第一个是接收成功的处理事件，第二个是接收失败的处理事件
                 *
                 * TODO: 作为参数传入延时 
                 * TODO: 使用标准库的线程延时*/
                 mq->recv(*callback, []() { usleep(10000); });
+
         });
 
 
