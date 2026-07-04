@@ -26,6 +26,13 @@ users用户可以在目录下创建子模块，extra下面还有一些额外的�
 ## PMC的安装方式
 ``` bash   
 # 1.安装依赖
+
+# 安装UniServe的libth包
+git clone https://github.com/gopsc/UniServe_libth
+cd UniServe_libth
+sudo bash _set.sh
+
+# 安装别的依赖
 sudo apt update
 sudo apt install git g++ make
 #sudo apt install python3 python3-pip python3-venv
@@ -38,11 +45,11 @@ sudo apt install libboost-all-dev
 #sudo apt install libargs-dev
 #sudo apt install libcpp-httplib-dev
 
-2. 创建项目
-git clone https://github.com/gopsc/pmc
-cd pmc  # 这是pmc模块
-make pmc
-#sudo make install
+# 2. 创建项目
+git clone https://github.com/gopsc/UniServe_core
+cd UniServe_core
+make
+sudo make install
 ```
 
 ## 加密通信机制（废弃）
