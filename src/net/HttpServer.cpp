@@ -6,6 +6,27 @@
 namespace pmc {
 namespace net {
 
+/* 所有HttpServer的异常基类 */
+class HttpServerException: public std::runtime_error {
+    public:
+        HttpServerException(const std::string& msg): runtime_error(msg) {}
+};
+
+/* 所有HttpListener发生异常的基类 */
+class HttpListenerException: public HttpServerException {
+    public:
+        explicit HttpListenerException(const std::string& msg)
+        : HttpServerException(msg) {}
+};
+
+/* 创建IO_CONTEXT失败 */
+class CreateObjectFailed: public HttpServerException {
+    public:
+        explicit CreateObjectFailed(const std::string& msg)
+        : HttpServerException(msg) {}
+};
+
+
 // Session类 - 处理单个HTTP连接
 class HttpServer::Session : public std::enable_shared_from_this<Session> {
 public:
@@ -87,7 +108,10 @@ public:
             }
         }
         if (ec) {
-            std::cerr << "Listener error: " << ec.message() << std::endl;
+                std::string errmsg = "Listener error: ";
+                errmsg += ec.message();
+                errmsg += "\n";
+                throw HttpListenerException(errmsg);
         }
     }
     
@@ -96,6 +120,7 @@ public:
             doAccept();
         }
     }
+
     
 private:
     void doAccept() {
@@ -113,21 +138,12 @@ private:
     HttpServer* server_;
 };
 
-// HttpServer实现 - 新构造函数（监听所有接口）
-HttpServer::HttpServer(unsigned short port, unsigned int threads)
-    : address_("0.0.0.0"), port_(port), threads_(threads), 
-      ioc_(std::make_unique<asio::io_context>(threads)) {
-    if (!ioc_) {
-        throw std::runtime_error("Failed to create io_context");
-    }
-}
-
-// HttpServer实现 - 新构造函数（指定监听地址）
+// HttpServer实现 - 构造函数（指定监听地址和线程数量）
 HttpServer::HttpServer(const std::string& address, unsigned short port, unsigned int threads)
     : address_(address), port_(port), threads_(threads), 
       ioc_(std::make_unique<asio::io_context>(threads)) {
     if (!ioc_) {
-        throw std::runtime_error("Failed to create io_context");
+        throw CreateObjectFailed("Failed to create io_context");
     }
 }
 
@@ -149,7 +165,7 @@ void HttpServer::start() {
         listener_ = std::make_shared<Listener>(*ioc_, endpoint, this);
 
         if (!listener_) {
-            throw std::runtime_error("Failed to create listener");
+            throw CreateObjectFailed("Failed to create listener");
         }
         listener_->run();
         

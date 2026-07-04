@@ -54,9 +54,7 @@ namespace qing {
 			handler(*this->server);
 			th.run();
 
-                  
-			this->server->start();
-			std::cout << "http server start at port " << port << std::endl;
+			this->server->start();  /* 这里包含了端口启动提示符输出 */
 			this->server->run();    /* 堵死线程，等待服务器运行结束 */
 		});
 
