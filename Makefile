@@ -16,7 +16,7 @@ CPP:= g++
 
 INCS:= -I include/
 
-MY_LIBS := -L/usr/local/lib -lus_th
+MY_LIBS := -L/usr/lib -lus_th -lus_http
 LIBS := -lpthread -lssl -lcrypto -lboost_program_options -lboost_json -lboost_thread -lboost_process -lboost_filesystem 
 
 CPPFLAGS := --std=c++20 -O3 -pipe #-Wall -Werror
@@ -24,42 +24,12 @@ CPPFLAGS := --std=c++20 -O3 -pipe #-Wall -Werror
 BUILD_DIR = build
 $(shell mkdir -p $(BUILD_DIR))
 
-#-----------
-#$(BUILD_DIR)/libpmc.so:  $(BUILD_DIR)/ansi.o $(BUILD_DIR)/utf8.o $(BUILD_DIR)/fsm.o $(BUILD_DIR)/Color.o $(BUILD_DIR)/Matrix.o
-#	$(CPP)  -shared -fPIC $^ $(LIBS) -o $@
-
+#--------
 all: ${APP_NAME}.out
-${APP_NAME}.out: $(BUILD_DIR)/main.o $(BUILD_DIR)/HttpServer.o $(BUILD_DIR)/PPool.o $(BUILD_DIR)/ProcessTask.o $(BUILD_DIR)/Tttask.o $(BUILD_DIR)/HttpTask.o $(BUILD_DIR)/pmc_mtd.o $(BUILD_DIR)/subsys_call.o
+${APP_NAME}.out: $(BUILD_DIR)/main.o $(BUILD_DIR)/PPool.o $(BUILD_DIR)/ProcessTask.o $(BUILD_DIR)/HttpTask.o $(BUILD_DIR)/Tttask.o $(BUILD_DIR)/pmc_mtd.o $(BUILD_DIR)/subsys_call.o
 	$(CPP) $^ $(LIBS) $(MY_LIBS) -o $@
 
 $(BUILD_DIR)/main.o:  src/main.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/mem.o:  src/hd/mem.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/I2C.o:  src/hd/I2C.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/PCA9685.o:  src/hd/PCA9685.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/MPU6050.o:  src/hd/MPU6050.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/Camera.o:  src/hd/Camera.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/Matrix.o:  src/nn/Matrix.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/HttpServer.o: src/net/HttpServer.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/WebSocketClient.o: src/net/WebSocketClient.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
-$(BUILD_DIR)/MatrixParser.o: src/code/MatrixParser.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
 $(BUILD_DIR)/Crypto_Basic.o: src/Crypto/Crypto_Basic.cpp
