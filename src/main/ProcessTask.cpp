@@ -1,6 +1,7 @@
 #include <iostream>
 #include "main/ProcessTask.hh"
 
+#ifdef __NEW_VER
 namespace qing {
 	bool ProcessTask::isRunning() {
 		return p && p->running(exit_code);
@@ -26,3 +27,4 @@ namespace qing {
 		}
 	}
 }
+#endif
