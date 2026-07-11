@@ -3,7 +3,7 @@
 #include <us/ITask.hpp>
 #include <us/HttpServer.hpp>
 namespace qing {
-
+	namespace http = boost::beast::http;
 	/* ----------------
 	 * HttpTask类 - 超文本服务器任务 */
 	class HttpTask: public ITask {
