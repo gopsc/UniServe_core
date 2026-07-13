@@ -32,9 +32,6 @@ ${APP_NAME}.out: $(BUILD_DIR)/main.o $(BUILD_DIR)/PPool.o $(BUILD_DIR)/ProcessTa
 $(BUILD_DIR)/main.o:  src/main.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
-$(BUILD_DIR)/Crypto_Basic.o: src/Crypto/Crypto_Basic.cpp
-	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
-
 $(BUILD_DIR)/PPool.o: src/main/PPool.cpp
 	$(CPP) $(CPPFLAGS) -c $^ $(INCS) -o $@
 
